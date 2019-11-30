@@ -20,12 +20,20 @@
       h2 {
         font-family: "Carter One", cursive;
       }
+      body {
+        background: rgb(63, 225, 251);
+        background: linear-gradient(
+          66deg,
+          rgba(63, 225, 251, 0.5578606442577031) 0%,
+          rgba(252, 70, 70, 0.3169642857142857) 92%
+        );
+      }
     </style>
   </head>
   <body>
     <!-- Navbar -->
 
-    <nav class="navbar navbar-light bg-dark" id="fixedNav">
+    <nav class="navbar navbar-light bg-dark">
       <a class="navbar-brand" href="index.html">
         <h2 class="text-white">Food Adda</h2>
       </a>
@@ -41,45 +49,53 @@
         </button>
       </div>
     </nav>
-
-    <div class="container-fluid">
+    <!-- slider and filter -->
+    <div class="container-fluid my-3">
       <div class="row">
         <div class="col-lg-3">
           <!-- filter -->
-          <div class="card my-3 shadow">
+          <div class="card shadow">
             <div class="card-group">
-              <div class="header border col-12 bg-danger text-warning">
+              <div class="header col-12 bg-info text-white">
                 <h2 class="text-center">Filter</h2>
               </div>
             </div>
             <div class="card-body">
-              <h3 class="my-3 py-2">Country</h3>
+              <!-- countries list -->
+              <h3
+                class="my-3 py-2 border text-center bg-light text-dark h1 shadow text-muted"
+              >
+                Country
+              </h3>
               <select name="country" class="custom-select" id="country">
                 <option value="#" disabled selected>Choose country</option>
-                <option value="Indian">Indian</option>
-                <option value="British">British</option>
+                <option value="Jamaican">Jamaican</option>
+                <option value="Tunisian">Tunisian</option>
                 <option value="French">French</option>
                 <option value="Canadian">Canadian</option>
                 <option value="Dutch">Dutch</option>
                 <option value="Thai">Thai</option>
-                <option value="Russian">Russian</option>
               </select>
             </div>
           </div>
         </div>
 
         <!-- foods -->
-        <div class="col-lg-9 border my-3 border border-info shadow-lg">
+        <div class="col-lg-9 border shadow">
           <h2 class="text-white bg-success text-center" id="type">
             Latest Foods
           </h2>
-          <div class="row" id="foods"></div>
+          <div class="row" id="foods">
+            <!-- all latest foods here -->
+          </div>
 
           <h2 class="text-white bg-danger text-center">Recommendation</h2>
 
-          <div class="row" id="randomFoods"></div>
+          <div class="row" id="randomFoods">
+            <!-- all Recommendation foods here -->
+          </div>
 
-          <div class="row" id="letter">
+          <div class="row border border-white shadow mt-4" id="letter">
             <!-- search by letter -->
             <h4 class="text-center bg-success ml-3">Search By Letter</h4>
             <p>
@@ -206,7 +222,6 @@
           </div>
         </div>
       </div>
-
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script src="/script/script.js"></script>
     </div>

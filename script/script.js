@@ -1,61 +1,64 @@
-// on load page
+// on load page....
 $(document).ready(function() {
-  var url = "https://www.themealdb.com/api/json/v1/1/filter.php?a=indian";
-  var method = "GET";
-  var food = new XMLHttpRequest();
-  food.open(method, url);
-  food.onload = function() {
-    if (food.status == 200) {
-      callBack("#foods", JSON.parse(food.response).meals, 8);
-    }
-  };
-  food.send();
-  //random foods on page//
-
-  // first
-  var random1 = new XMLHttpRequest();
-  var randomUrl1 = "https://www.themealdb.com/api/json/v1/1/random.php";
-  random1.open("GET", randomUrl1);
-  random1.onload = function() {
-    if (random1.status == 200) {
-      callBack("#randomFoods", JSON.parse(random1.response).meals, 1);
-    }
-  };
-  random1.send();
-
-  // second
-  var random2 = new XMLHttpRequest();
-  var randomUrl2 = "https://www.themealdb.com/api/json/v1/1/random.php";
-  random2.open("GET", randomUrl2);
-  random2.onload = function() {
-    if (random2.status == 200) {
-      callBack("#randomFoods", JSON.parse(random2.response).meals, 1);
-    }
-  };
-  random2.send();
-
-  //third
-
-  var random3 = new XMLHttpRequest();
-  var randomUrl3 = "https://www.themealdb.com/api/json/v1/1/random.php";
-  random3.open("GET", randomUrl3);
-  random3.onload = function() {
-    if (random3.status == 200) {
-      callBack("#randomFoods", JSON.parse(random3.response).meals, 1);
-    }
-  };
-  random3.send();
-  // fourth
-  var random4 = new XMLHttpRequest();
-  var randomUrl4 = "https://www.themealdb.com/api/json/v1/1/random.php";
-  random4.open("GET", randomUrl4);
-  random4.onload = function() {
-    if (random4.status == 200) {
-      callBack("#randomFoods", JSON.parse(random4.response).meals, 1);
-    }
-  };
-  random4.send();
+  xhrRequest(
+    "https://www.themealdb.com/api/json/v1/1/filter.php?a=indian",
+    "#foods",
+    false
+  );
+  //random foods
+  for (var i = 0; i < 4; i++) {
+    xhrRequest(
+      "https://www.themealdb.com/api/json/v1/1/random.php",
+      "#randomFoods",
+      false
+    );
+  }
 });
+
+//search function
+$("#searchBtn").click(function() {
+  var searchVal = $("#searchForm").val();
+  var searchLink =
+    "https://www.themealdb.com/api/json/v1/1/search.php?s=" + searchVal;
+  xhrRequest(searchLink, "#foods", true, searchVal, "#type");
+});
+
+//filter function
+$("#country").change(function() {
+  var countryVal = $("#country").val();
+  var countryLink =
+    "https://www.themealdb.com/api/json/v1/1/search.php?s=" + countryVal;
+  xhrRequest(countryLink, "#foods", true, countryVal, "#type");
+});
+
+// search by letter
+$(".letter").click(function() {
+  var letterVal = $(this).val();
+  var letterLink = `https://www.themealdb.com/api/json/v1/1/search.php?f=${letterVal}`;
+  xhrRequest(letterLink, "#foods", true, `Search for "${letterVal}"`, "#type");
+});
+
+function xhrRequest(url, location, printAnywhere, headValue, whereToPrint) {
+  $("#foods").empty();
+  var xhr = new XMLHttpRequest();
+  var method = "GET";
+  xhr.open(method, url);
+  xhr.onload = function() {
+    if (xhr.status == 200) {
+      var data = JSON.parse(xhr.response).meals;
+      var dataLength = data.length;
+      callBack(location, data, dataLength);
+      if (printAnywhere) {
+        displayHeading(headValue, whereToPrint);
+      }
+    }
+  };
+  xhr.send();
+}
+//display if You have any headings to print;
+function displayHeading(value, location) {
+  $(location).html(value.toUpperCase());
+}
 
 // callBack Function
 
@@ -73,6 +76,7 @@ function callBack(location, data, dataSize) {
       "href",
       `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${data[i].idMeal}`
     );
+    para.setAttribute("class", "bg-dark px-2 text-white");
     var img = document.createElement("img");
     imgSrc = data[i].strMealThumb;
     img.setAttribute("src", imgSrc);
@@ -88,71 +92,7 @@ function callBack(location, data, dataSize) {
   }
 }
 
-//search function
-
-$("#searchBtn").click(function() {
-  $("#foods").empty();
-  var searchInput = $("#searchForm").val();
-  var link = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`;
-  var searchXhr = new XMLHttpRequest();
-  searchXhr.open("GET", link);
-  searchXhr.onload = function() {
-    if (searchXhr.status == 200) {
-      callBack(
-        "#foods",
-        JSON.parse(searchXhr.response).meals,
-        JSON.parse(searchXhr.response).meals.length
-      );
-      $("#type").html(searchInput.toUpperCase());
-    }
-  };
-  searchXhr.send();
-});
-
-//filter
-
-$("#country").change(function() {
-  $("#foods").empty();
-  var countryValue = $("#country").val();
-  var countrylink = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${countryValue}`;
-
-  var catXhr = new XMLHttpRequest();
-  catXhr.open("GET", countrylink);
-  catXhr.onload = function() {
-    if (catXhr.status == 200) {
-      callBack(
-        "#foods",
-        JSON.parse(catXhr.response).meals,
-        JSON.parse(catXhr.response).meals.length
-      );
-      $("#type").html(countryValue.toUpperCase());
-    }
-  };
-  catXhr.send();
-});
-
-//search by letter
-
-$(".letter").click(function() {
-  $("#foods").empty();
-  var letterVal = $(this).val();
-  var letterLink = `https://www.themealdb.com/api/json/v1/1/search.php?f=${letterVal}`;
-  var letterXhr = new XMLHttpRequest();
-  letterXhr.open("GET", letterLink);
-  letterXhr.onload = function() {
-    if (letterXhr.status == 200) {
-      callBack(
-        "#foods",
-        JSON.parse(letterXhr.response).meals,
-        JSON.parse(letterXhr.response).meals.length
-      );
-      $("#type").html(`Search for "${letterVal}"`);
-    }
-  };
-  letterXhr.send();
-});
-
-//details page
+// //details page
 function addList() {
   document.querySelectorAll("a").forEach(function(a) {
     a.addEventListener("click", showDetail);
